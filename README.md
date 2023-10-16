@@ -1,66 +1,59 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Opis projektu
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Zadanie:
 
-## About Laravel
+1. Przygotowanie środowiska developerskiego dla projektu przy pomocy Dockera.
+2. Istnieje możliwość pracy samodzielnej bądź w grupach maksymalnie 2 osobowych.
+3. Do projektu należy przygotować sprawozdanie.
+4. Nie można korzystać z gotowych paczek, takich jak np. Laravel Sail.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Wstęp:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Docker to narzędzie, które pozwala deweloperom na pakowanie aplikacji wraz z wszystkimi jej zależnościami w kontenerze, co ułatwia przewidywalność działania aplikacji w różnych środowiskach. Laravel to popularny framework PHP, który jest często używany do tworzenia aplikacji webowych.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+W ramach tego projektu, zadaniem studentów jest przygotowanie pliku docker-compose.yml dla bazowego projektu Laravelowego. Poniżej znajduje się przewodnik, jakie składowe będą potrzebne do tego projektu.
 
-## Learning Laravel
+### Składowe projektu:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Obraz bazowy PHP: Aby uruchomić aplikację Laravel, potrzebny jest serwer PHP. Można użyć oficjalnego obrazu PHP z Docker Hub, ale ważne jest, aby wybrać odpowiednią wersję PHP, która jest kompatybilna z konkretną wersją Laravela.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. Serwer bazy danych: Laravel często współpracuje z bazami danych, więc ważne jest, aby dodać odpowiedni serwer bazy danych do kontenera. Najpopularniejszym wyborem jest MySQL, ale można również wybrać PostgreSQL, SQLite lub inne.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. Webserver (np. Nginx lub Apache): Aby obsługiwać żądania HTTP do aplikacji Laravel, potrzebny jest serwer WWW. Nginx jest często wybierany ze względu na jego wydajność i konfigurację.
 
-## Laravel Sponsors
+4. Composer: Laravel używa Composera do zarządzania zależnościami PHP, więc ważne jest, aby mieć go w kontenerze.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+5. Node.js i NPM (dla ambitnych):
 
-### Premium Partners
+6. Redis lub inny system kolejek (dla ambitnych):
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Sprawozdanie w LaTeX
 
-## Contributing
+Po zakończeniu prac nad konfiguracją docker-compose.yml dla projektu, każdy student jest zobowiązany do przygotowania sprawozdania w formacie LaTeX. 
+Sprawozdanie to ma na celu przedstawienie pracy, którą student wykonał, oraz zapewnienie instrukcji dla innych osób, które chciałyby skorzystać z opracowanego rozwiązania.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Co ma się znaleźć w sprawozdaniu ?
 
-## Code of Conduct
+1. Wstęp
+   1. Krótka prezentacja projektu oraz celów, jakie miał on na celu osiągnąć.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Instrukcja uruchomienia projektu 
+   1. Krok po kroku opis, jak uruchomić projekt przy użyciu dockera. 
+   2. Instrukcja, jak wejść do konsoli PHP, aby móc korzystać z Composera i innych narzędzi wewnątrz kontenera.
 
-## Security Vulnerabilities
+3. Opis zawartości pliku `docker-compose.yml`
+   1. Opis poszczególnych usług (services) zdefiniowanych w pliku, wraz z wyjaśnieniem wybranych opcji konfiguracyjnych. 
+   2. Ewentualne uwagi odnośnie wyboru konkretnych obrazów, wersji itp.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Podsumowanie:
+    1. Co udało się osiągnąć podczas projektu?
+    2. Jakie problemy napotkano i jak je rozwiązano?
+    3. Co można by było zrobić inaczej?
 
-## License
+### Przydatne linki
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **[Docker](https://www.docker.com/)**
+- **[Wstęp do dockera](https://github.com/KarolZygadlo/CWUP-resources/blob/main/Computer%20networks/Docker.md)**
+- **[LaTeX](https://www.latex-project.org/get/)**
+- **[Overleaf - darmowy edytor LaTeX online](https://www.overleaf.com/)**
+- **[Przykładowy dokument w LaTeX](https://github.com/KarolZygadlo/Image-Classification/tree/main/paper)**
