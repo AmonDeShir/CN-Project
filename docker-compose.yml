@@ -26,6 +26,18 @@ services:
         networks:
             - app-net
 
+    node:
+        build:
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        container_name: node
+        working_dir: /app
+        tty: true
+        volumes:
+            - ./application:/app
+        networks:
+            - app-net
+
 networks:
     app-net:
         driver: bridge

@@ -11,5 +11,4 @@ RUN docker-php-ext-configure zip
 COPY ./docker/php/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ENV PORT=8000
 ENTRYPOINT ["/entrypoint.sh"]
