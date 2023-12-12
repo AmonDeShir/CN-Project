@@ -2,6 +2,7 @@
 
 cd /app
 
+composer require predis/predis
 composer install
 
 php artisan key:generate
