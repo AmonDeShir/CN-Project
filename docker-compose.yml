@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+    php:
+        container_name: php
+        ports:
+            - 8000:8000
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        networks:
+            - app-net
+
+networks:
+    app-net:
+        driver: bridge
