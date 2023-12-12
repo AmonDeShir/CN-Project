@@ -46,7 +46,6 @@ services:
             interval: 5s
             timeout: 5s
             retries: 5
-        
 
     node:
         build:
@@ -55,6 +54,8 @@ services:
         container_name: node
         working_dir: /app
         tty: true
+        ports:
+            - 5173:5173
         volumes:
             - ./application:/app
         networks:
