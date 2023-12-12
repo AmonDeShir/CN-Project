@@ -25,6 +25,28 @@ services:
             dockerfile: ./docker/php/Dockerfile
         networks:
             - app-net
+        depends_on:
+            database:
+                condition: service_healthy
+
+    database:
+        container_name: database
+        working_dir: /app
+        image: postgres:16.1-alpine3.19
+        environment:
+            POSTGRES_DB:  ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        networks:
+            - app-net
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        
 
     node:
         build:
@@ -41,3 +63,6 @@ services:
 networks:
     app-net:
         driver: bridge
+
+volumes:
+  db_data:
