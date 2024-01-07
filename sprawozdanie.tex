@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+
+\title{Sprawozdanie z Przygotowania Środowiska Deweloperskiego}
+\author{Dominik Prabucki, Dominik Purgał}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\section{Wstęp}
+Projekt ten miał na celu przygotowanie środowiska developerskiego dla aplikacji opartej na frameworku Laravel przy użyciu technologii Docker. Główne składowe projektu obejmują obraz PHP, serwer baz danych (MySQL), serwer WWW (Nginx), oraz Composer do zarządzania zależnościami PHP. Dodatkowo w skład środowiska wchodzi również skonfigurowany obraz z nodejs i npm do pracy nad frontend aplikacji, oraz system kolejek Redis.
+
+\section{Instrukcja uruchomienia projektu}
+\subsection{Kroki do uruchomienia projektu}
+Aby uruchomić projekt, postępuj zgodnie z poniższymi krokami:
+\begin{enumerate}
+    \item Zainstaluj Docker na swoim systemie.
+    \item Sklonuj repozytorim git
+    \begin{verbatim}
+    git clone https://github.com/AmonDeShir/CN-Project
+    \end{verbatim}
+    \item Otwórz terminal i przejdź do katalogu, w którym znajduje się plik docker-compose.yml.
+    \item Zbuduj obrazy dockera
+    \begin{verbatim}
+    docker compose build --no-cache --pull   
+    \end{verbatim}
+    \item Stwórz plik .env i dostosuj jego konfiguracje.
+    \begin{verbatim}
+    cp .env.example .env
+    \end{verbatim}
+    \item Uruchom projekt przy użyciu komendy:
+    \begin{verbatim}
+    docker compose up -d
+    \end{verbatim}
+    \item Po zakończeniu procesu uruchomienia, projekt będzie dostępny pod adresem http://localhost.
+\end{enumerate}
+
+\subsection{Dostęp do konsoli PHP w kontenerze}
+Aby uzyskać dostęp do konsoli PHP wewnątrz kontenera, wykonaj następujące kroki:
+\begin{enumerate}
+    \item Otwórz terminal.
+    \item Uruchom poniższą komendę:
+    \begin{verbatim}
+    docker compose exec -it php bash
+    \end{verbatim}
+    \item Teraz jesteś wewnątrz kontenera PHP i możesz korzystać z narzędzi, takich jak Composer.
+\end{enumerate}
+
+\subsection{Dostęp do konsoli NodeJS w kontenerze}
+Aby uzyskać dostęp do konsoli NodeJS wewnątrz kontenera, wykonaj następujące kroki:
+\begin{enumerate}
+    \item Otwórz terminal.
+    \item Uruchom poniższą komendę:
+    \begin{verbatim}
+    docker compose exec -it node bash
+    \end{verbatim}
+    \item Teraz jesteś wewnątrz kontenera node i możesz korzystać z narzędzi, takich jak npm.
+\end{enumerate}
+
+\subsection{Uruchomienie serwera vite}
+Aby uruchomić serwer vite, wykonaj następujące kroki:
+\begin{enumerate}
+    \item Otwórz terminal.
+    \item Uruchom poniższą komendy:
+    \begin{verbatim}
+    docker compose exec -it node bash
+    npm run dev
+    \end{verbatim}
+    \item Po zakończeniu procesu uruchomienia, serwer będzie dostępny pod adresem http://localhost:5173/.
+\end{enumerate}
+
+\section{Opis pliku docker-compose.yml}
+Poniżej znajduje się opis pliku docker-compose.yml:
+
+\begin{verbatim}
+    Składa się on z pięciu usług (web, php, database, redis, node), oraz z konfiguracji woluminów na dane bazy i redis oraz jednej wspólnej sieci dla całego środowiska.
+\end{verbatim}
+
+\section{Opis poszczególnych usług}
+\subsection{PHP (php)}
+Ta usługa używa korzysta z własnego obrazu opartego na obrazie php:8.2-fpm-alpine3.16 i jest odpowiedzialna za serwer PHP oraz instalacje composer'a. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Poza instalacją composer'a dodatkowo obraz jest wzbogacony o PDO dla postgres sql oraz zależności wymagane przez Laravel'a. Obraz podczas startu uruchamia plik ./docker/php/entrypoint.sh, który jest odpowiedzialny za instalacje predis oraz uruchomienie serwera php. Usługa czeka z uruchomieniem na baze danych i serwer redis.
+
+\subsection{Nginx (web)}
+Usługa web korzysta z obrazu nginx:1.25.3-alpine i obsługuje serwer WWW. Port 80 jest mapowany na port 80 w kontenerze, a pliki konfiguracyjne Nginx są montowane z /docker/nginx/config.conf
+
+\subsection{Postgres (database)}
+Usługa database używa obrazu postgres:16.1-alpine3.19 i jest używana jako baza danych projektu. Konfiguracja bazy danych jest wczytywana ze zmiennych środowiskowych (plik .env). Dodatkowo baza danych zapisuje swoje dany na osobnych woluminie db\_data. Usługa posada również healthcheck pozwalający sprawdzić, czy baza danych jest już gotowa do pracy.
+
+\subsection{System kolejek redis (redis)}
+Ta usługa wykorzystuje obraz redis:7.2.3-alpine jest odpowiedzialna za przygotowanie systemu kolejek. Konfiguracja redis jest wczytywana ze zmiennych środowiskowych. Dane redis są przechowywane na woluminie redis\_data. Dostępny jest również healthcheck pozwalający sprawdzić, czy redis jest już gotowy do pracy.
+
+\subsection{NodeJS (node)}
+Ta usługa używa korzysta z własnego obrazu opartego na obrazie node:20-alpine i jest odpowiedzialna za przygotowanie środowiska nodejs do pracy nad frontend'em. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Obraz podczas startu uruchamia plik ./docker/node/entrypoint.sh, który jest odpowiedzialny za instalacje wszystkich potrzebnych bibliotek js (między innymi vite) oraz uruchomienie domyślnego entrypoint'a obrazu node:20-alpine.
+
+\section{Podsumowanie}
+Podczas pracy nad projektem udało nam się skonfigurować środowisko Docker, które pozwala na uruchomienie projektu z PHP, Nginx, PostgresSQL, Nodejs i Redis. 
+
+\subsection{Napotkane problemy}
+Podczas pracy napytaliśmy na problem z uruchomianiem entrypoint'ów, przez nasze obrazy, dodanie polecenia chmod +x rozwiązało problem. Na podobny problem napotkaliśmy podczas testów serwera php, który nie chciał wczytywać plików, okazało się że problem spowodowany był przez brak praw uzytkownika www-data do katalogu z plikami aplikacji "/app/storage". Problem rozwiązało dodanie komendy chown -R www-data:www-data /app/storage
+do entrypoint.sh obrazu php.
+
+\subsection{Co można było zrobić inaczej?}
+Można by zmienić baze danych na łatwiejszą w konfiguracji, na przykład na MariaDB. Nginx można zmienić na Apache. Dodatkowo można zastąpić plik entrypoint.sh odpowiednio przygotowanym plikiem Makefile. Same obrazy php i nodejs można by wysłać na DockerHub i wyeliminować w ten sposób czasochłonny proces budowania obrazów.
+\end{document}
