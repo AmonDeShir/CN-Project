@@ -65,7 +65,7 @@ Aby uzyskać dostęp do konsoli NodeJS wewnątrz kontenera, wykonaj następując
 Aby uruchomić serwer vite, wykonaj następujące kroki:
 \begin{enumerate}
     \item Otwórz terminal.
-    \item Uruchom poniższą komendy:
+    \item Uruchom poniższe komendy:
     \begin{verbatim}
     docker compose exec -it node bash
     npm run dev
@@ -74,33 +74,29 @@ Aby uruchomić serwer vite, wykonaj następujące kroki:
 \end{enumerate}
 
 \section{Opis pliku docker-compose.yml}
-Poniżej znajduje się opis pliku docker-compose.yml:
-
-\begin{verbatim}
-    Składa się on z pięciu usług (web, php, database, redis, node), oraz z konfiguracji woluminów na dane bazy i redis oraz jednej wspólnej sieci dla całego środowiska.
-\end{verbatim}
+Plik docker-compose składa się z pięciu usług (web, php, database, redis, node), oraz z konfiguracji woluminów przechowujących dane bazy i redis oraz jednej wspólnej sieci dla całego środowiska.
 
 \section{Opis poszczególnych usług}
 \subsection{PHP (php)}
-Ta usługa używa korzysta z własnego obrazu opartego na obrazie php:8.2-fpm-alpine3.16 i jest odpowiedzialna za serwer PHP oraz instalacje composer'a. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Poza instalacją composer'a dodatkowo obraz jest wzbogacony o PDO dla postgres sql oraz zależności wymagane przez Laravel'a. Obraz podczas startu uruchamia plik ./docker/php/entrypoint.sh, który jest odpowiedzialny za instalacje predis oraz uruchomienie serwera php. Usługa czeka z uruchomieniem na baze danych i serwer redis.
+Ta usługa korzysta z własnego obrazu opartego na obrazie php:8.2-fpm-alpine3.16 i jest odpowiedzialna za serwer PHP oraz instalacje composer'a. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Poza instalacją composer'a dodatkowo obraz jest wzbogacony o PDO dla postgres sql oraz zależności wymagane przez Laravel'a. Obraz podczas startu uruchamia plik ./docker/php/entrypoint.sh, który jest odpowiedzialny za instalacje predis oraz uruchomienie serwera php. Usługa czeka z uruchomieniem na baze danych i serwer redis.
 
 \subsection{Nginx (web)}
 Usługa web korzysta z obrazu nginx:1.25.3-alpine i obsługuje serwer WWW. Port 80 jest mapowany na port 80 w kontenerze, a pliki konfiguracyjne Nginx są montowane z /docker/nginx/config.conf
 
 \subsection{Postgres (database)}
-Usługa database używa obrazu postgres:16.1-alpine3.19 i jest używana jako baza danych projektu. Konfiguracja bazy danych jest wczytywana ze zmiennych środowiskowych (plik .env). Dodatkowo baza danych zapisuje swoje dany na osobnych woluminie db\_data. Usługa posada również healthcheck pozwalający sprawdzić, czy baza danych jest już gotowa do pracy.
+Usługa database używa obrazu postgres:16.1-alpine3.19 i jest używana jako baza danych projektu. Konfiguracja bazy danych jest wczytywana ze zmiennych środowiskowych (plik .env). Dodatkowo baza danych zapisuje swoje dane na osobnych woluminie db\_data. Usługa posada również healthcheck pozwalający sprawdzić, czy baza danych jest już gotowa do pracy.
 
 \subsection{System kolejek redis (redis)}
 Ta usługa wykorzystuje obraz redis:7.2.3-alpine jest odpowiedzialna za przygotowanie systemu kolejek. Konfiguracja redis jest wczytywana ze zmiennych środowiskowych. Dane redis są przechowywane na woluminie redis\_data. Dostępny jest również healthcheck pozwalający sprawdzić, czy redis jest już gotowy do pracy.
 
 \subsection{NodeJS (node)}
-Ta usługa używa korzysta z własnego obrazu opartego na obrazie node:20-alpine i jest odpowiedzialna za przygotowanie środowiska nodejs do pracy nad frontend'em. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Obraz podczas startu uruchamia plik ./docker/node/entrypoint.sh, który jest odpowiedzialny za instalacje wszystkich potrzebnych bibliotek js (między innymi vite) oraz uruchomienie domyślnego entrypoint'a obrazu node:20-alpine.
+Ta usługa korzysta z własnego obrazu opartego na obrazie node:20-alpine i jest odpowiedzialna za przygotowanie środowiska nodejs do pracy nad frontend'em. Pliki projektu są montowane do wewnętrznego katalogu /app kontenera. Obraz podczas startu uruchamia plik ./docker/node/entrypoint.sh, który jest odpowiedzialny za instalacje wszystkich potrzebnych bibliotek js (między innymi vite) oraz uruchomienie domyślnego entrypoint'a obrazu node:20-alpine.
 
 \section{Podsumowanie}
 Podczas pracy nad projektem udało nam się skonfigurować środowisko Docker, które pozwala na uruchomienie projektu z PHP, Nginx, PostgresSQL, Nodejs i Redis. 
 
 \subsection{Napotkane problemy}
-Podczas pracy napytaliśmy na problem z uruchomianiem entrypoint'ów, przez nasze obrazy, dodanie polecenia chmod +x rozwiązało problem. Na podobny problem napotkaliśmy podczas testów serwera php, który nie chciał wczytywać plików, okazało się że problem spowodowany był przez brak praw uzytkownika www-data do katalogu z plikami aplikacji "/app/storage". Problem rozwiązało dodanie komendy chown -R www-data:www-data /app/storage
+Podczas pracy napotkaliśmy na problem z uruchomianiem entrypoint'ów, przez nasze obrazy, dodanie polecenia chmod +x rozwiązało problem. Na podobny problem napotkaliśmy podczas testów serwera php, który nie chciał wczytywać plików, okazało się że problem spowodowany był przez brak praw uzytkownika www-data do katalogu z plikami aplikacji "/app/storage". Problem rozwiązało dodanie komendy chown -R www-data:www-data /app/storage
 do entrypoint.sh obrazu php.
 
 \subsection{Co można było zrobić inaczej?}
